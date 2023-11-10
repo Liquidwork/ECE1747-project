@@ -5,10 +5,10 @@ url = "https://kquqqi3ijnocedkbxqhyoqbfoa0bjpca.lambda-url.us-east-1.on.aws/Grad
 
 # Generate samples
 
-X1 = 2 * np.random.rand(1000, 1)
-X2 = -2 * np.random.rand(1000, 1)
+X1 = 2 * np.random.rand(10000, 1)
+X2 = -2 * np.random.rand(10000, 1)
 X = np.concatenate((X1, X2), axis=1)
-y = 4 + 3 * X1 + 2 * X2 + np.random.randn(1000, 1)
+y = 4 + 3 * X1 + 2 * X2 + np.random.randn(10000, 1)
 
 # Parameters for the regression
 params = [[3., 4., 7.]]
