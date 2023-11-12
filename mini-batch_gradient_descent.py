@@ -1,4 +1,5 @@
 import numpy as np
+from LinearRegression import gradientCalculate
 
 # Define dataset and model parameters
 X = np.random.rand(1000, 2)
@@ -8,7 +9,7 @@ epochs = 1000
 batch_size = 10
 
 # Initialize model parameters
-theta = np.random.rand(2)  # Initialize with random values
+theta = np.random.rand(3)  # Initialize with random values
 
 # Mini-batch gradient descent
 for epoch in range(epochs):
@@ -23,13 +24,12 @@ for epoch in range(epochs):
         y_mini_batch = y[i:i + batch_size]
 
         # Compute the gradient for the mini-batch
-        gradient = (1 / len(X_mini_batch)) * np.dot(X_mini_batch.T, (np.dot(X_mini_batch, theta) - y_mini_batch))
+        gradient, cost = gradientCalculate(X, y, theta)
 
         # Update model parameters
         theta -= learning_rate * gradient
 
     # Calculate the cost for monitoring convergence
-    cost = np.mean((np.dot(X, theta) - y) ** 2)
     print(f"Epoch {epoch + 1}/{epochs}, Cost: {cost}")
 
 print("Optimized theta:", theta)
