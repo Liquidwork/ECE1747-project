@@ -40,7 +40,7 @@ for i in range(1000):
         # print(params, grad, mse)
         timer = time.time() - start
         total_time += timer
-        print(f"Epoch: {i:4d}/1000, cost: {mse:1.7f}, epoch time: {timer:.6f}s, average time: {total_time / (i + 1):.6f}", end="\r")
+        print(f"Epoch: {i + 1:4d}/1000, cost: {mse:1.7f}, epoch time: {timer:.6f}s, average time: {total_time / (i + 1):.6f}", end="\r")
         # Change gradient according to learning rate
         params -= learning_rate * np.asarray(grad)
     else: 
