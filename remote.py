@@ -1,6 +1,7 @@
 import requests
 import numpy as np
 import json
+import time
 
 url = "https://kquqqi3ijnocedkbxqhyoqbfoa0bjpca.lambda-url.us-east-1.on.aws/Gradient"
 
@@ -23,9 +24,11 @@ body = json.dumps({"X": X, "y": y}) # This part will not change.
 # print(body)
 body = body[:-1] + ', "params": '
 
+total_time = 0
 
 # Fit the model
 for i in range(1000):
+    start = time.time()
     data = body + str(params.tolist()) + "}"
     r = requests.post(url, data=data, headers={"Content-Type": "application/json"})
     
@@ -34,9 +37,14 @@ for i in range(1000):
         res = r.json()
         grad = res["gradient"]
         mse = res["mse"]
-        print(params, grad, mse)
+        # print(params, grad, mse)
+        timer = time.time() - start
+        total_time += timer
+        print(f"Epoch: {i:4d}/1000, cost: {mse:1.7f}, epoch time: {timer:.6f}s, average time: {total_time / (i + 1):.6f}", end="\r")
         # Change gradient according to learning rate
         params -= learning_rate * np.asarray(grad)
     else: 
         print(r.status_code)
         print(r.text)
+
+print()
