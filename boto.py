@@ -3,6 +3,8 @@ import numpy as np
 import json
 import time
 import boto3
+import base64
+from data_process import compress
 
 url = "https://kquqqi3ijnocedkbxqhyoqbfoa0bjpca.lambda-url.us-east-1.on.aws/Gradient"
 
@@ -19,33 +21,29 @@ y = 4 + 3 * X1 + 2 * X2 + np.random.randn(1000, 1)
 params = [3., 4., 7.]
 learning_rate = 0.05
 
-X = X.tolist()
-y = y.tolist()
 params = np.asarray(params)
-
-body = json.dumps({"X": X, "y": y}) # This part will not change.
-# print(body)
-body = body[:-1] + ', "params": '
 
 total_time = 0
 
 # Fit the model
 for i in range(1000):
     start = time.time()
-    data = body + str(params.tolist()) + "}"
+    data = base64.b64encode(compress(X, y, params))
     r = client.invoke(
         FunctionName='gradient_VPC',
         InvocationType='RequestResponse',
         LogType='None',
-        Payload=bytes(data, "utf-8"),
+        Payload=json.dumps(data.decode("ascii"))
     )
     
     # print(r)
     
     if r['ResponseMetadata']['HTTPStatusCode'] == 200:
         # Fit the model
+        
         result = str(r["Payload"].read())[31:-3]
         result = result.replace("\\", "")
+        
         # print(result)
         res = json.loads(result)
         grad = res["gradient"]
